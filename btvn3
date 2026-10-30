@@ -1,0 +1,56 @@
+
+I. Sơ đồ kiến trúc kênh (Workspace Channel Structure)
+
+Hệ thống được chia thành 4 phân vùng chính nhằm tách biệt hoàn toàn luồng thông tin, đảm bảo thông tin kỹ thuật không bị trộn lẫn với nội dung giải trí.
+
+1. Phân vùng Điều hành & Quản lý (Management)
+
+• #01-announcement (Kênh Thông báo):
+	• Nội dung: Chỉ dùng để đăng các thông tin quan trọng như deadline, lịch họp, thay đổi nhân sự hoặc cập nhật lớn từ Trưởng dự án.
+	• Quy định: Khóa quyền chat của thành viên (Chỉ Read-only đối với nhân viên), mọi thảo luận, đặt câu hỏi về thông báo bắt buộc phải sử dụng tính năng Reply in Thread.
+• #02-general (Kênh Chung):
+	• Nội dung: Nơi trao đổi các vấn đề chung liên quan đến vận hành dự án, điểm danh, phân công lịch trực hằng ngày.
+
+2. Phân vùng Kỹ thuật chuyên sâu (Technical - Dự án Bãi đỗ xe thông minh)
+
+• #tech-hardware-sensors (Kênh Phần cứng & Cảm biến):
+	• Nội dung: Chuyên thảo luận các vấn đề kỹ thuật về phần cứng, báo lỗi cảm biến (như lỗi "cảm biến bãi A hỏng" trong bối cảnh), mạch điều khiển, cấu hình gateway.
+• #tech-software-dev (Kênh Phát triển Phần mềm):
+	• Nội dung: Nơi các lập trình viên trao đổi về code, API, xử lý logic, cập nhật cơ sở dữ liệu và fix bug hệ thống.
+
+3. Phân vùng Vận hành & Giám sát (Operations)
+
+• #ops-alerts-bot (Kênh Bot cảnh báo tự động):
+	• Nội dung: Tích hợp Webhook để hệ thống tự động đẩy thông báo khi có lỗi kỹ thuật (Ví dụ: Hệ thống phát hiện cảm biến mất tín hiệu sẽ tự động đẩy alert về đây thay vì con người phải nhắn thủ công).
+	• Quy định: Tuyệt đối không chat văn bản thường ở kênh này để tránh làm nhiễu nhật ký lỗi.
+
+4. Phân vùng Kết nối & Giải trí (Social)
+
+• #z-relax-meme (Kênh Tán gẫu & Giải trí):
+	• Nội dung: Nơi chia sẻ hình ảnh hài hước, meme mèo, rủ nhau đi ăn, nói chuyện ngoài lề dự án.
+	• Quy định: Thành viên được thoải mái chat tự do, nhưng nghiêm cấm mang nội dung kỹ thuật hoặc công việc vào kênh này. Mọi người có quyền tắt thông báo (Mute) kênh này để tập trung làm việc.
+
+II. Bản quy ước giao tiếp bất đồng bộ (Asynchronous Communication)
+
+Để giải quyết triệt để bẫy dữ liệu "ép rep ngay lập tức" (gây ngắt quãng trạng thái tập trung sâu - Deep Work của lập trình viên), cả nhóm cần tuân thủ 3 quy tắc vàng sau:
+
+1. Quy tắc 1: Tiêu diệt "No-Hello Trap" (Cấm nhắn tin chào hỏi trống không)
+
+• Vấn đề: Nhắn "Alo", "Chào em", "Hôm nay ai đi trực?" rồi đợi đối phương trả lời mới nói tiếp sẽ làm tốn thời gian và gây phiền nhiễu cho người nhận.
+• Quy ước:
+	• Mọi tin nhắn công việc phải chứa đầy đủ thông tin trong một khối văn bản duy nhất (Bối cảnh + Vấn đề + Đề xuất/Yêu cầu + Thời hạn mong muốn).
+	• Ví dụ đúng: "Gửi nhóm Tech, cảm biến bãi A đang bị mất tín hiệu từ 10h sáng nay (mã lỗi E-04). Nhờ @Hùng kiểm tra lại cấu hình firmware trước 15h chiều nay nhé."
+
+2. Quy tắc 2: Giới hạn nghiêm ngặt quyền sử dụng @all và @here
+
+• Vấn đề: Tag cả nhóm một cách vô tội vạ cho những việc nhỏ nhặt khiến thành viên bị chai sạn thông báo (Notification Fatigue), dẫn đến việc bỏ lỡ deadline thực sự quan trọng.
+• Quy ước:
+	• Chỉ dùng @all hoặc @here tại kênh #01-announcement khi có thảm họa sập hệ thống hoặc thay đổi lịch trình khẩn cấp ảnh hưởng tới toàn bộ dự án.
+	• Trong các kênh kỹ thuật, chỉ tag đích danh người chịu trách nhiệm trực tiếp (Ví dụ: @NguyenVanA). Người được tag có quyền phản hồi chậm (trong vòng 1 - 2 tiếng) nếu họ đang trong phiên gõ code cao độ. Việc không trả lời ngay lập tức được công nhận là hợp lệ.
+
+3. Quy tắc 3: Bắt buộc sử dụng "Reply in Thread" để đóng gói cuộc hội thoại
+
+• Vấn đề: Các cuộc thảo luận kỹ thuật diễn ra dồn dập trên khung chat chính sẽ đẩy các tin nhắn khác trôi đi mất.
+• Quy ước:
+	• Khi muốn phản hồi, đóng góp ý kiến hoặc sửa lỗi cho một chủ đề cụ thể, thành viên không nhắn trực tiếp vào khung chat chính. Thay vào đó, bắt buộc phải di chuột vào tin nhắn gốc và chọn Reply in Thread (Trả lời trong chuỗi).
+	• Khung chat chính của channel chỉ là nơi hiển thị danh sách các chủ đề (Topics) lớn, giữ cho giao diện luôn sạch đẹp, trực quan và dễ tra cứu lại lịch sử.
